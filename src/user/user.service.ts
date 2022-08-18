@@ -9,7 +9,7 @@ import { UpdateUserDto } from './dto/update-user-dto';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
   ) {}
 
   async getAll() {
@@ -37,10 +37,10 @@ export class UserService {
 
     return updated;
   }
-  
+
   async delete(id: string) {
     const { affected: deleted } = await this.userRepository.delete(id);
-  
+
     return { deleted };
   }
 }
