@@ -1,13 +1,11 @@
-import { Transform } from 'class-transformer';
 import {
   Entity,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
   PrimaryGeneratedColumn,
-  VersionColumn,
+  OneToMany
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { CreditApplication } from 'src/credit-application/credit-application.entity';
 
 @Entity()
 export class User {
@@ -22,23 +20,13 @@ export class User {
   @Column()
   tel: string;
 
-  @ApiProperty({ example: '1', description: 'Версия пользователя' })
-  @VersionColumn()
-  version: number;
-
   @ApiProperty({
-    example: '2022-08-18T12:35:56.015Z',
-    description: 'Время создания пользователя',
+    example: '',
+    description: 'Заявки пользователя',
   })
-  @CreateDateColumn()
-  @Transform(({ value }) => value.getTime())
-  createdAt: Date;
-
-  @ApiProperty({
-    example: '2022-08-18T12:35:56.015Z',
-    description: 'Время обновления пользователя',
-  })
-  @UpdateDateColumn()
-  @Transform(({ value }) => value.getTime())
-  updatedAt: Date;
+  @OneToMany(
+    () => CreditApplication,
+    (application: CreditApplication) => application.user,
+  )
+  applications: CreditApplication[];
 }

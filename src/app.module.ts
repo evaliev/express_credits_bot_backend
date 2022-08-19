@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { CreditApplicationModule } from './credit-application/credit-application.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { UserModule } from './user/user.module';
       synchronize: true,
     }),
     UserModule,
+    CreditApplicationModule,
+    AuthModule,
   ],
 })
 export class AppModule {

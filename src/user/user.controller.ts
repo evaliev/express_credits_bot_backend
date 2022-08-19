@@ -6,13 +6,11 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Put,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user-dto';
-import { UpdateUserDto } from './dto/update-user-dto';
 import { UserService } from './user.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
+import { CreateUserDto } from './dto/create-user-dto';
 
 @ApiTags('Пользователь')
 @Controller('user')
@@ -38,16 +36,6 @@ export class UserController {
   @Post()
   async create(@Body() dto: CreateUserDto) {
     return await this.userService.create(dto);
-  }
-
-  @ApiOperation({ summary: 'Изменение пользователя' })
-  @ApiResponse({ type: User })
-  @Put(':id')
-  async update(
-    @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() dto: UpdateUserDto,
-  ) {
-    return await this.userService.update(id, dto);
   }
 
   @ApiOperation({ summary: 'Удаление пользователя' })
