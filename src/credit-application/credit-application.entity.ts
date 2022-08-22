@@ -1,4 +1,3 @@
-import { IsNumber, Min, Max } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { User } from 'src/user/user.entity';
 import {
@@ -26,6 +25,9 @@ export class CreditApplication {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  userId: string;
+
   @ManyToOne(() => User, (user: User) => user.applications)
   user: User;
 
@@ -34,9 +36,6 @@ export class CreditApplication {
     description: 'Сумма кредита',
   })
   @Column()
-  @IsNumber()
-  @Min(10 ** 5)
-  @Max(10 ** 7)
   amount: number;
 
   @ApiProperty({
@@ -44,9 +43,6 @@ export class CreditApplication {
     description: 'Срок кредита (мес)',
   })
   @Column()
-  @IsNumber()
-  @Min(1)
-  @Max(36)
   term: number;
 
   @ApiProperty({
@@ -54,9 +50,6 @@ export class CreditApplication {
     description: 'Процентная ставка по кредиту',
   })
   @Column()
-  @IsNumber()
-  @Min(0)
-  @Max(100)
   rate: number;
 
   @ApiProperty({

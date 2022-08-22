@@ -4,17 +4,16 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   async login(dto: LoginDto) {
     const user = await this.userService.getOneByTel(dto.tel);
 
     if (user) {
-      return { token: user.id };
+      return { userId: user.id };
     }
 
     const newUser = await this.userService.create(dto);
-    return { token: newUser.id };
+    return { userId: newUser.id };
   }
 }

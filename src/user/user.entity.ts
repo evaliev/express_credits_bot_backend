@@ -2,7 +2,10 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany
+  OneToMany,
+  AfterLoad,
+  AfterInsert,
+  AfterUpdate,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreditApplication } from 'src/credit-application/credit-application.entity';
@@ -29,4 +32,13 @@ export class User {
     (application: CreditApplication) => application.user,
   )
   applications: CreditApplication[];
+
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  async nullChecks() {
+    if (!this.applications) {
+      this.applications = [];
+    }
+  }
 }
