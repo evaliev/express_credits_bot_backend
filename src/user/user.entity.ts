@@ -17,23 +17,21 @@ import { UserInfo } from 'src/user-info/user-info.entity';
 export class User {
   @ApiProperty({
     example: '165cea0a-3372-4273-b77e-f2a16b47b19b',
-    description: '',
+    description: 'Id',
   })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ example: '+79999999999', description: 'Телефон пользователя' })
+  @ApiProperty({ description: 'Телефон пользователя' })
   @Column()
   tel: string;
 
+  @ApiProperty({ description: 'Данные пользователя для оформления кредита' })
   @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
   @JoinColumn()
   info: UserInfo;
 
-  @ApiProperty({
-    example: '',
-    description: 'Заявки пользователя',
-  })
+  @ApiProperty({ description: 'Заявки пользователя' })
   @OneToMany(
     () => CreditApplication,
     (application: CreditApplication) => application.user,
