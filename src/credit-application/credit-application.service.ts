@@ -19,6 +19,20 @@ export class CreditApplicationService {
     return await this.creditApplicationRepository.save({ userId, ...dto });
   }
 
+  async update(applicationId: string, dto: CreateCreditApplicationDto) {
+    const {
+      raw: [updated],
+    } = await this.creditApplicationRepository
+      .createQueryBuilder()
+      .update(CreditApplication)
+      .set(dto)
+      .where('id = :id', { id: applicationId })
+      .returning('*')
+      .execute();
+
+    return updated;
+  }
+
   async delete(applicationId: string) {
     const { affected: deleted } = await this.creditApplicationRepository.delete(
       applicationId,

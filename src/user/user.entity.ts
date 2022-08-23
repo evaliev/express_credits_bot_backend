@@ -6,9 +6,12 @@ import {
   AfterLoad,
   AfterInsert,
   AfterUpdate,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreditApplication } from 'src/credit-application/credit-application.entity';
+import { UserInfo } from 'src/user-info/user-info.entity';
 
 @Entity()
 export class User {
@@ -22,6 +25,10 @@ export class User {
   @ApiProperty({ example: '+79999999999', description: 'Телефон пользователя' })
   @Column()
   tel: string;
+
+  @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
+  @JoinColumn()
+  info: UserInfo;
 
   @ApiProperty({
     example: '',

@@ -15,7 +15,11 @@ export class UserService {
   ) {}
 
   async getOneByTel(tel: string) {
-    return await this.userRepository.findOneBy({ tel });
+    return await this.userRepository.findOne({
+      where: {
+        tel,
+      },
+    });
   }
 
   async create(dto: CreateUserDto) {
@@ -45,6 +49,13 @@ export class UserService {
 
   async createApplication(userId: string, dto: CreateCreditApplicationDto) {
     return await this.creditApplicationService.create(userId, dto);
+  }
+
+  async updateApplication(
+    applicationId: string,
+    dto: CreateCreditApplicationDto,
+  ) {
+    return await this.creditApplicationService.update(applicationId, dto);
   }
 
   async deleteApplication(applicationId: string) {
