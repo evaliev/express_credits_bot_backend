@@ -3,44 +3,62 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user-dto';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { CreateCreditApplicationDto } from 'src/credit-application/dto/create-credit-application.dto';
+import { CreditApplicationService } from 'src/credit-application/credit-application.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private creditApplicationService: CreditApplicationService,
   ) {}
 
-  async getAll() {
-    return await this.userRepository.find();
-  }
-
-  async getOne(id: string) {
-    return await this.userRepository.findOneBy({ id });
+  async getOneByTel(tel: string) {
+    return await this.userRepository.findOne({
+      where: {
+        tel,
+      },
+    });
   }
 
   async create(dto: CreateUserDto) {
     return await this.userRepository.save(dto);
   }
 
-  async update(id: string, dto: UpdateUserDto) {
-    const {
-      raw: [updated],
-    } = await this.userRepository
-      .createQueryBuilder()
-      .update(User)
-      .set(dto)
-      .where('id = :id', { id })
-      .returning('*')
-      .execute();
-
-    return updated;
-  }
-
   async delete(id: string) {
     const { affected: deleted } = await this.userRepository.delete(id);
 
     return { deleted };
+  }
+
+  async getAllApplications(userId: string) {
+    const { applications } = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['applications'],
+    });
+
+    return applications;
+  }
+
+  async getOneApplication(applicationId: string) {
+    return await this.creditApplicationService.getOne(applicationId);
+  }
+
+  async createApplication(userId: string, dto: CreateCreditApplicationDto) {
+    return await this.creditApplicationService.create(userId, dto);
+  }
+
+  async updateApplication(
+    applicationId: string,
+    dto: CreateCreditApplicationDto,
+  ) {
+    return await this.creditApplicationService.update(applicationId, dto);
+  }
+
+  async deleteApplication(applicationId: string) {
+    return await this.creditApplicationService.delete(applicationId);
   }
 }

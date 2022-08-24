@@ -1,44 +1,49 @@
-import { Transform } from 'class-transformer';
 import {
   Entity,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
   PrimaryGeneratedColumn,
-  VersionColumn,
+  OneToMany,
+  AfterLoad,
+  AfterInsert,
+  AfterUpdate,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { CreditApplication } from 'src/credit-application/credit-application.entity';
+import { UserInfo } from 'src/user-info/user-info.entity';
 
 @Entity()
 export class User {
   @ApiProperty({
     example: '165cea0a-3372-4273-b77e-f2a16b47b19b',
-    description: '',
+    description: 'Id',
   })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ example: '+79999999999', description: 'Телефон пользователя' })
+  @ApiProperty({ description: 'Телефон пользователя' })
   @Column()
   tel: string;
 
-  @ApiProperty({ example: '1', description: 'Версия пользователя' })
-  @VersionColumn()
-  version: number;
+  @ApiProperty({ description: 'Данные пользователя для оформления кредита' })
+  @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
+  @JoinColumn()
+  info: UserInfo;
 
-  @ApiProperty({
-    example: '2022-08-18T12:35:56.015Z',
-    description: 'Время создания пользователя',
-  })
-  @CreateDateColumn()
-  @Transform(({ value }) => value.getTime())
-  createdAt: Date;
+  @ApiProperty({ description: 'Заявки пользователя' })
+  @OneToMany(
+    () => CreditApplication,
+    (application: CreditApplication) => application.user,
+  )
+  applications: CreditApplication[];
 
-  @ApiProperty({
-    example: '2022-08-18T12:35:56.015Z',
-    description: 'Время обновления пользователя',
-  })
-  @UpdateDateColumn()
-  @Transform(({ value }) => value.getTime())
-  updatedAt: Date;
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  async nullChecks() {
+    if (!this.applications) {
+      this.applications = [];
+    }
+  }
 }
