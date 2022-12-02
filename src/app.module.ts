@@ -6,6 +6,9 @@ import { UserModule } from './user/user.module';
 import { CreditApplicationModule } from './credit-application/credit-application.module';
 import { AuthModule } from './auth/auth.module';
 import { UserInfoModule } from './user-info/user-info.module';
+import { TelegramUpdate } from './telegram/telegram.update';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { telegramSessionMiddleware } from './telegram/telegram.middleware';
 
 @Module({
   imports: [
@@ -22,6 +25,11 @@ import { UserInfoModule } from './user-info/user-info.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    TelegrafModule.forRoot({
+      token: process.env.TELEGRAM_BOT_TOKEN,
+      middlewares: [telegramSessionMiddleware],
+    }),
+    TelegramUpdate,
     UserModule,
     CreditApplicationModule,
     AuthModule,
