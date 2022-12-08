@@ -23,7 +23,7 @@ async function bootstrap() {
 
 function setUpSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('Экспресс-кредит бот')
+    .setTitle('Экспресс-кредит телеграм бот')
     .setDescription('Документация REST API')
     .setVersion('1.0.0')
     .build();
