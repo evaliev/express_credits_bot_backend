@@ -29,7 +29,7 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           port: ${{ secrets.SSH_PORT}}
           script: |
-            cd ~/home/${{ secrets.USERNAME }}/repo/express_credits_bot_backend
+            cd /home/${{ secrets.USERNAME }}/repo/express_credits_bot_backend
             git pull origin master
             git status
             docker-compose up --build -d
