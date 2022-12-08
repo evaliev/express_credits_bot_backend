@@ -3,12 +3,14 @@ import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { CreditApplicationModule } from './credit-application/credit-application.module';
 import { AuthModule } from './auth/auth.module';
-import { UserInfoModule } from './user-info/user-info.module';
 import { TelegramUpdate } from './telegram/telegram.update';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { telegramSessionMiddleware } from './telegram/telegram.middleware';
+import { ConditionsModule } from './conditions/conditions.module';
+import { OwnerInfoModule } from './owner-info/owner-info.module';
+import { IndiInfoModule } from './indi-info/indi-info.module';
+import { ApplicationModule } from './application/application.module';
 
 @Module({
   imports: [
@@ -25,15 +27,17 @@ import { telegramSessionMiddleware } from './telegram/telegram.middleware';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    TelegrafModule.forRoot({
-      token: process.env.TELEGRAM_BOT_TOKEN,
-      middlewares: [telegramSessionMiddleware],
-    }),
+    // TelegrafModule.forRoot({
+    //   token: process.env.TELEGRAM_BOT_TOKEN,
+    //   middlewares: [telegramSessionMiddleware],
+    // }),
     TelegramUpdate,
     UserModule,
-    CreditApplicationModule,
     AuthModule,
-    UserInfoModule,
+    ConditionsModule,
+    OwnerInfoModule,
+    IndiInfoModule,
+    ApplicationModule,
   ],
 })
 export class AppModule {

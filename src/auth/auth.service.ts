@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import { LoginDto } from './dto/login.dto';
+import { AuthRequestDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UserService) {}
 
-  async login(dto: LoginDto) {
-    const user = await this.userService.getOneByTel(dto.tel);
+  async login(dto: AuthRequestDto) {
+    const user = await this.userService.getOne(dto);
 
     if (user) {
       return { userId: user.id };

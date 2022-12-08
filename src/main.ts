@@ -12,18 +12,18 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const APP_PORT = config.get('APP_PORT') || 8080;
 
-  setUpSwagger(app);
-
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v2');
   app.enableCors();
+
+  setUpSwagger(app);
 
   await app.listen(APP_PORT);
 }
 
 function setUpSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('КПК')
+    .setTitle('Экспресс-кредит бот')
     .setDescription('Документация REST API')
     .setVersion('1.0.0')
     .build();
