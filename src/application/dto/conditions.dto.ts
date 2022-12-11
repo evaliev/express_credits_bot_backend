@@ -9,8 +9,4 @@ export class ConditionsDto {
   @ApiProperty()
   @IsNumber()
   term: number;
-
-  @ApiProperty()
-  @IsNumber()
-  monthlyPayment: number;
 }

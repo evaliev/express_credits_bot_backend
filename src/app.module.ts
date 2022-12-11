@@ -2,14 +2,10 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TelegramUpdate } from './telegram/telegram.update';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { telegramSessionMiddleware } from './telegram/telegram.middleware';
-import { ConditionsModule } from './conditions/conditions.module';
-import { OwnerInfoModule } from './owner-info/owner-info.module';
-import { IndiInfoModule } from './indi-info/indi-info.module';
 import { ApplicationModule } from './application/application.module';
 
 @Module({
@@ -32,11 +28,7 @@ import { ApplicationModule } from './application/application.module';
     //   middlewares: [telegramSessionMiddleware],
     // }),
     TelegramUpdate,
-    UserModule,
     AuthModule,
-    ConditionsModule,
-    OwnerInfoModule,
-    IndiInfoModule,
     ApplicationModule,
   ],
 })

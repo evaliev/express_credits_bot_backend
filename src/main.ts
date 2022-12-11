@@ -13,7 +13,7 @@ async function bootstrap() {
   const APP_PORT = config.get('APP_PORT') || 8080;
 
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api/v2');
+  app.setGlobalPrefix('api/v1');
   app.enableCors();
 
   setUpSwagger(app);
