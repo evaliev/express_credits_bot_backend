@@ -10,9 +10,3 @@ export class AuthRequestDto {
   @IsString()
   chatId: string;
 }
-
-export class AuthResponseDto {
-  @ApiProperty()
-  @IsString()
-  userId: string;
-}
