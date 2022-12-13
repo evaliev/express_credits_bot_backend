@@ -5,18 +5,18 @@ services:
     container_name: express-credit-bot-server
     build:
       context: .
-      dockerfile: ./Dockerfile.server 
+      dockerfile: ./Dockerfile.server
     environment:
       - APP_PORT
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules   
+      - /usr/src/app/node_modules
     ports:
-      - $APP_PORT:$APP_PORT
+      - $APP_PORT
     depends_on:
       - postgres
     networks:
-      - express-credit-bot-net
+      - bot-network
     restart: always
   postgres:
     image: postgres:latest
@@ -27,15 +27,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - $DB_PORT:$DB_PORT  
+      - $DB_PORT
     networks:
-      - express-credit-bot-net 
+      - bot-network
     restart: always
 
 volumes:
   pgdata:
 
 networks:
-  express-credit-bot-net:
-    name: express-credit-bot-net
+  bot-network:
+    name: bot-network
     driver: bridge
