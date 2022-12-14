@@ -83,15 +83,15 @@ export class ApplicationService {
   }
 
   async createConditions() {
-    return await this.conditionsRepository.save(initialConditions);
+    return await this.conditionsRepository.save({ ...initialConditions });
   }
 
   async createOwnerInfo() {
-    return await this.ownerInfoRepository.save(initialOwnerInfo);
+    return await this.ownerInfoRepository.save({ ...initialOwnerInfo });
   }
 
   async createIndiInfo() {
-    return await this.indiInfoRepository.save(initialIndiInfo);
+    return await this.indiInfoRepository.save({ ...initialIndiInfo });
   }
 
   async changeStatus(applicationId: string, status: ApplicationStatusses) {
