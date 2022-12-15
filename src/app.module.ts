@@ -7,6 +7,10 @@ import { TelegramUpdate } from './telegram/telegram.update';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { telegramSessionMiddleware } from './telegram/telegram.middleware';
 import { ApplicationModule } from './application/application.module';
+import {
+  GoogleRecaptchaModule,
+  GoogleRecaptchaNetwork,
+} from '@nestlab/google-recaptcha';
 
 @Module({
   imports: [
@@ -22,6 +26,11 @@ import { ApplicationModule } from './application/application.module';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    GoogleRecaptchaModule.forRoot({
+      secretKey: process.env.RECAPTCHA_SECRET_KEY,
+      response: (req) => req.body.reCaptchaToken,
+      network: GoogleRecaptchaNetwork.Recaptcha,
     }),
     // TelegrafModule.forRoot({
     //   token: process.env.TELEGRAM_BOT_TOKEN,

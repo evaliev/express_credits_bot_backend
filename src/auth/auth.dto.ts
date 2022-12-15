@@ -9,4 +9,8 @@ export class AuthRequestDto {
   @ApiProperty()
   @IsString()
   chatId: string;
+
+  @ApiProperty()
+  @IsString()
+  reCaptchaToken: string | null;
 }
