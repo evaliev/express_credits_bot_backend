@@ -40,6 +40,7 @@ import {
     AuthModule,
     ApplicationModule,
   ],
+  providers: [TelegramUpdate],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {
