@@ -20,6 +20,10 @@ import {
   InfoByUserDto,
   OwnerInfoByUserDto,
 } from './dto/info-by-user.dto';
+import { InjectBot } from 'nestjs-telegraf';
+import { Context, Telegraf } from 'telegraf';
+import { toBuffer } from 'qrcode';
+import { Readable } from 'stream';
 
 @Injectable()
 export class ApplicationService {
@@ -32,6 +36,7 @@ export class ApplicationService {
     private ownerInfoRepository: Repository<OwnerInfo>,
     @InjectRepository(IndiInfo)
     private indiInfoRepository: Repository<IndiInfo>,
+    @InjectBot() private readonly bot: Telegraf<Context>,
   ) {}
 
   async getApplicationByChatId(chatId: string) {
@@ -154,7 +159,20 @@ export class ApplicationService {
   }
 
   async finish(applicationId: string) {
-    //TODO отправить данные на сервис банка
-    //TODO отправить QR-код в чат
+    const { chatId } = await this.applicationRepository.findOneBy({
+      id: applicationId,
+    });
+
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+        res();
+      }, 15_000);
+    });
+
+    toBuffer(applicationId, (_, code) => {
+      this.bot.telegram.sendPhoto(chatId, {
+        source: Readable.from(code),
+      });
+    });
   }
 }
