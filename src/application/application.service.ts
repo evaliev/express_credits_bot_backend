@@ -15,6 +15,11 @@ import {
   initialIndiInfo,
   initialOwnerInfo,
 } from 'src/helpers';
+import {
+  IndiInfoByUserDto,
+  InfoByUserDto,
+  OwnerInfoByUserDto,
+} from './dto/info-by-user.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -29,22 +34,22 @@ export class ApplicationService {
     private indiInfoRepository: Repository<IndiInfo>,
   ) {}
 
-  async _getApplicationByChatId(chatId: string) {
+  async getApplicationByChatId(chatId: string) {
     return await this.applicationRepository.findOne({
       where: { chatId },
       relations: ['conditions', 'ownerInfo', 'indiInfo'],
     });
   }
 
-  async _getApplicationById(applicationId: string) {
+  async getApplicationById(applicationId: string) {
     return await this.applicationRepository.findOne({
       where: { id: applicationId },
       relations: ['conditions', 'ownerInfo', 'indiInfo'],
     });
   }
 
-  async _getApplicationRelationsIds(applicationId: string) {
-    const application = await this._getApplicationById(applicationId);
+  async getApplicationRelationsIds(applicationId: string) {
+    const application = await this.getApplicationById(applicationId);
 
     return {
       conditionsId: application.conditions.id,
@@ -53,21 +58,11 @@ export class ApplicationService {
     };
   }
 
-  async getApplication(chatId: string) {
-    const application = await this._getApplicationByChatId(chatId);
-
-    if (!application) {
-      return await this.createApplication(chatId);
-    }
-
-    return application;
-  }
-
-  async createApplication(chatId: string) {
+  async createApplication(chatId: string, infoByUser: InfoByUserDto) {
     const [conditions, ownerInfo, indiInfo] = await Promise.all([
       this.createConditions(),
-      this.createOwnerInfo(),
-      this.createIndiInfo(),
+      this.createOwnerInfo(infoByUser.ownerInfo),
+      this.createIndiInfo(infoByUser.indiInfo),
     ]);
 
     const application = this.applicationRepository.create();
@@ -79,19 +74,25 @@ export class ApplicationService {
 
     await this.applicationRepository.save(application);
 
-    return await this._getApplicationByChatId(chatId);
+    return await this.getApplicationByChatId(chatId);
   }
 
   async createConditions() {
     return await this.conditionsRepository.save({ ...initialConditions });
   }
 
-  async createOwnerInfo() {
-    return await this.ownerInfoRepository.save({ ...initialOwnerInfo });
+  async createOwnerInfo(ownerInfoByUser: OwnerInfoByUserDto) {
+    return await this.ownerInfoRepository.save({
+      ...initialOwnerInfo,
+      ...ownerInfoByUser,
+    });
   }
 
-  async createIndiInfo() {
-    return await this.indiInfoRepository.save({ ...initialIndiInfo });
+  async createIndiInfo(indiInfoByUser: IndiInfoByUserDto) {
+    return await this.indiInfoRepository.save({
+      ...initialIndiInfo,
+      ...indiInfoByUser,
+    });
   }
 
   async changeStatus(applicationId: string, status: ApplicationStatusses) {
@@ -103,11 +104,11 @@ export class ApplicationService {
       .returning('*')
       .execute();
 
-    return await this._getApplicationById(applicationId);
+    return await this.getApplicationById(applicationId);
   }
 
   async updateConditions(applicationId: string, conditions: ConditionsDto) {
-    const { conditionsId } = await this._getApplicationRelationsIds(
+    const { conditionsId } = await this.getApplicationRelationsIds(
       applicationId,
     );
 
@@ -119,11 +120,11 @@ export class ApplicationService {
       .returning('*')
       .execute();
 
-    return await this._getApplicationById(applicationId);
+    return await this.getApplicationById(applicationId);
   }
 
   async updateOwnerInfo(applicationId: string, ownerInfo: OwnerInfoDto) {
-    const { ownerInfoId } = await this._getApplicationRelationsIds(
+    const { ownerInfoId } = await this.getApplicationRelationsIds(
       applicationId,
     );
 
@@ -135,13 +136,11 @@ export class ApplicationService {
       .returning('*')
       .execute();
 
-    return await this._getApplicationById(applicationId);
+    return await this.getApplicationById(applicationId);
   }
 
   async updateIndiInfo(applicationId: string, indiInfo: IndiInfoDto) {
-    const { indiInfoId } = await this._getApplicationRelationsIds(
-      applicationId,
-    );
+    const { indiInfoId } = await this.getApplicationRelationsIds(applicationId);
 
     await this.indiInfoRepository
       .createQueryBuilder()
@@ -151,7 +150,7 @@ export class ApplicationService {
       .returning('*')
       .execute();
 
-    return await this._getApplicationById(applicationId);
+    return await this.getApplicationById(applicationId);
   }
 
   async finish(applicationId: string) {

@@ -5,3 +5,7 @@ export enum ApplicationStatusses {
   SUCCESS_PAGE = 'SUCCESS_PAGE',
   OWNER_DATA = 'OWNER_DATA',
 }
+
+export enum ErrorMessages {
+  INVALID_INN = 'ИНН не найден',
+}
