@@ -1,18 +1,18 @@
-import { Update, Ctx, Hears, Start } from 'nestjs-telegraf';
+import { Update, Ctx, On } from 'nestjs-telegraf';
+import { Context } from 'telegraf';
 
 @Update()
 export class TelegramUpdate {
-  @Start()
-  async start(@Ctx() ctx) {
-    await ctx.reply('Напиши мне, чтобы узнать статус заявки');
-  }
+  @On('web_app_data')
+  async onWebAppData(@Ctx() ctx: Context) {
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+        res();
+      }, 15000);
+    });
 
-  @Hears(/статус|заявк/i)
-  async hears(@Ctx() ctx) {
-    const emoji = new Array(3).fill(String.fromCodePoint(0x1f618)).join('');
+    const webAppData: any = await ctx.webAppData.data.json();
 
-    await ctx.reply(
-      `Заявка №1 от 01.01.2023 одобрена. Добро пожаловать в мир кабалы ${emoji}`,
-    );
+    await ctx.reply(JSON.stringify(webAppData?.applicationId));
   }
 }

@@ -32,10 +32,10 @@ import {
       response: (req) => req.body.reCaptchaToken,
       network: GoogleRecaptchaNetwork.Recaptcha,
     }),
-    // TelegrafModule.forRoot({
-    //   token: process.env.TELEGRAM_BOT_TOKEN,
-    //   middlewares: [telegramSessionMiddleware],
-    // }),
+    TelegrafModule.forRoot({
+      token: process.env.TELEGRAM_BOT_TOKEN,
+      middlewares: [telegramSessionMiddleware],
+    }),
     TelegramUpdate,
     AuthModule,
     ApplicationModule,
