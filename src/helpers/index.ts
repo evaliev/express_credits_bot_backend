@@ -5,7 +5,7 @@ export const initialApplication = {
 };
 
 export const initialConditions = {
-  amount: 5_000_000,
+  amount: 10_000_000,
   term: 36,
 };
 
