@@ -20,7 +20,7 @@ export class TelegramService {
     );
 
     this.schedulerRegistry.addTimeout(
-      'qr_generation',
+      `qr_generation_${chatId}_${Date.now()}`,
       setTimeout(() => {
         toBuffer(qrCodeData.applicationId, async (_, code) => {
           await this.bot.telegram.sendPhoto(chatId, {
