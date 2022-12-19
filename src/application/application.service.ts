@@ -20,10 +20,7 @@ import {
   InfoByUserDto,
   OwnerInfoByUserDto,
 } from './dto/info-by-user.dto';
-import { InjectBot } from 'nestjs-telegraf';
-import { Context, Telegraf } from 'telegraf';
-import { toBuffer } from 'qrcode';
-import { Readable } from 'stream';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 @Injectable()
 export class ApplicationService {
@@ -36,7 +33,7 @@ export class ApplicationService {
     private ownerInfoRepository: Repository<OwnerInfo>,
     @InjectRepository(IndiInfo)
     private indiInfoRepository: Repository<IndiInfo>,
-    @InjectBot() private readonly bot: Telegraf<Context>,
+    private telegramService: TelegramService,
   ) {}
 
   async getApplicationByChatId(chatId: string) {
@@ -158,21 +155,16 @@ export class ApplicationService {
     return await this.getApplicationById(applicationId);
   }
 
-  async finish(applicationId: string) {
+  async submit(applicationId: string) {
     const { chatId } = await this.applicationRepository.findOneBy({
       id: applicationId,
     });
 
-    await new Promise<void>((res) => {
-      setTimeout(() => {
-        res();
-      }, 15_000);
-    });
+    this.telegramService.submitApplication(chatId, { applicationId });
 
-    toBuffer(applicationId, (_, code) => {
-      this.bot.telegram.sendPhoto(chatId, {
-        source: Readable.from(code),
-      });
-    });
+    return await this.changeStatus(
+      applicationId,
+      ApplicationStatusses.SUCCESS_PAGE,
+    );
   }
 }

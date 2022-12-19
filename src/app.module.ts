@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { TelegramUpdate } from './telegram/telegram.update';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { telegramSessionMiddleware } from './telegram/telegram.middleware';
 import { ApplicationModule } from './application/application.module';
@@ -11,6 +10,8 @@ import {
   GoogleRecaptchaModule,
   GoogleRecaptchaNetwork,
 } from '@nestlab/google-recaptcha';
+import { TelegramModule } from './telegram/telegram.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -36,11 +37,11 @@ import {
       token: process.env.TELEGRAM_BOT_TOKEN,
       middlewares: [telegramSessionMiddleware],
     }),
-    TelegramUpdate,
+    ScheduleModule.forRoot(),
     AuthModule,
     ApplicationModule,
+    TelegramModule,
   ],
-  providers: [TelegramUpdate],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {

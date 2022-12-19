@@ -73,12 +73,12 @@ export class ApplicationController {
     );
   }
 
-  @Post(':applicationId/finish')
+  @Post(':applicationId/submit')
   @HttpCode(200)
   @ApiOperation({ summary: 'Отправить на рассмотрение' })
-  async finish(
+  async submit(
     @Param('applicationId', new ParseUUIDPipe()) applicationId: string,
   ) {
-    return await this.applicationService.finish(applicationId);
+    return await this.applicationService.submit(applicationId);
   }
 }
