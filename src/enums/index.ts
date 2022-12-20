@@ -8,4 +8,5 @@ export enum ApplicationStatusses {
 
 export enum ErrorMessages {
   INVALID_INN = 'ИНН не найден',
+  NO_APPLICATION = 'Нет существующей заявки',
 }

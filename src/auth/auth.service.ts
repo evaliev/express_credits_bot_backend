@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { ApplicationService } from 'src/application/application.service';
 import { InfoByUserDto } from 'src/application/dto/info-by-user.dto';
 import { ErrorMessages } from 'src/enums';
-import { AuthRequestDto } from './auth.dto';
+import { LoginDto, RegistryDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,24 +13,25 @@ export class AuthService {
     private readonly httpService: HttpService,
   ) {}
 
-  async login({ chatId, INN }: AuthRequestDto) {
+  async login({ chatId }: LoginDto) {
+    const activeApplication =
+      await this.applicationService.getApplicationByChatId(chatId);
+
+    if (!activeApplication) {
+      throw new Error(ErrorMessages.NO_APPLICATION);
+    }
+
+    return activeApplication;
+  }
+
+  async registry({ chatId, INN }: RegistryDto) {
     const infoByUser = await this.getInfoByUser(INN);
 
     if (!infoByUser) {
       throw new Error(ErrorMessages.INVALID_INN);
     }
 
-    const activeApplication =
-      await this.applicationService.getApplicationByChatId(chatId);
-
-    if (!activeApplication) {
-      return await this.applicationService.createApplication(
-        chatId,
-        infoByUser,
-      );
-    }
-
-    return activeApplication;
+    return await this.applicationService.createApplication(chatId, infoByUser);
   }
 
   async getInfoByUser(INN: string): Promise<InfoByUserDto | void> {

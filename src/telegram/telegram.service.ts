@@ -23,13 +23,15 @@ export class TelegramService {
       `qr_generation_${chatId}_${Date.now()}`,
       setTimeout(() => {
         toBuffer(qrCodeData.applicationId, async (_, code) => {
-          await this.bot.telegram.sendPhoto(chatId, {
-            source: Readable.from(code),
-          });
-
-          await this.bot.telegram.sendMessage(
+          await this.bot.telegram.sendPhoto(
             chatId,
-            'Поздравляем!🥳 Ваша заявка на кредит предварительно одобрена! Приходите в отделение банка и покажите этот QR код сотруднику',
+            {
+              source: Readable.from(code),
+            },
+            {
+              caption:
+                'Поздравляем!🥳 Ваша заявка на кредит предварительно одобрена! Приходите в отделение банка и покажите этот QR код сотруднику',
+            },
           );
         });
       }, 2 * 60_000),
