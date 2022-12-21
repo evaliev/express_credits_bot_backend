@@ -42,16 +42,15 @@ export const replyMarkup = {
       /* Inline buttons. 2 side-by-side */
       [
         {
-          text: 'Получить кредит',
+          text: '💰 Получить кредит',
           web_app: {
             url: 'https://smartbinary.ru',
           },
         },
-        { text: 'Про бота', callback_data: 'about' },
       ],
 
       /* One button */
-      [{ text: 'Политика безопасности', callback_data: 'security' }],
+      [{ text: '📚 Политика безопасности', callback_data: 'security' }],
     ],
   },
 };

@@ -8,12 +8,14 @@ import { createReadStream } from 'fs';
 export class TelegramUpdate {
   @Start()
   async startCommand(ctx: Context) {
-    const [_, messageMd] = await Promise.all([
-      ctx.reply(`Привет ${ctx.message.from.first_name}!`),
-      readFile('hello.md', 'utf-8'),
-    ]);
-
-    await ctx.replyWithHTML(messageMd, replyMarkup);
+    const messageMd = await readFile('hello.md', 'utf-8');
+    const message = messageMd.replace(
+      '{{username}}',
+      `${ctx.message.from.first_name || ''} ${
+        ctx.message.from.last_name || ''
+      }`,
+    );
+    await ctx.replyWithHTML(message, replyMarkup);
   }
 
   @Action('security')
