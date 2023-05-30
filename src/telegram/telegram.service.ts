@@ -34,7 +34,7 @@ export class TelegramService {
             },
           );
         });
-      }, 2 * 60_000),
+      }, 15_000),
     );
   }
 }
